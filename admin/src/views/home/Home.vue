@@ -35,9 +35,11 @@
         <template #header>公司产品</template>
 
         <!-- 走马灯展示图片 -->
-        <el-carousel :interval="4000" type="card" height="200px">
-            <el-carousel-item v-for="item in 6" :key="item">
-                <h3 text="2xl" justify="center">{{ item }}</h3>
+        <el-carousel :interval="4000" type="card" height="200px" v-if="loopList.length">
+            <el-carousel-item v-for="item in loopList" :key="item._id">
+                <div :style="{ backgroundImage: `url(http://localhost:3000${item.cover})` }" class="carousel-bg">
+                    <h3 text="2xl" justify="center">{{ item.title }}</h3>
+                </div>
             </el-carousel-item>
         </el-carousel>
 
@@ -46,21 +48,34 @@
 
 <script lang='ts' setup>
 import userInformationStore from '../../store/userInformation';
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import axios from 'axios';
 
 const store = userInformationStore()
-console.log(store.userInfo)
+const loopList = ref<any[]>([])
+// console.log(store.userInfo)
 
 // 计算属性动态缓存头像地址
-const avatarUrl = computed(()=>store.userInfo.avatar?'http://localhost:3000'+store.userInfo.avatar:'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
+const avatarUrl = computed(() => store.userInfo.avatar ? 'http://localhost:3000' + store.userInfo.avatar : 'https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png')
 // 欢迎语
-const welcomeText = computed(()=>new Date().getHours()<12?"要开心啊每一天":"喝杯咖啡提提神")
+const welcomeText = computed(() => new Date().getHours() < 12 ? "要开心啊每一天" : "喝杯咖啡提提神")
+
+// 获取产品列表
+onMounted(() => {
+    getData()
+})
+
+const getData = async () => {
+    const res = await axios.get('/adminapi/product/list')
+    // console.log(res.data.data)
+    loopList.value = res.data.data
+}
 </script>
 
 <style scoped>
 /* 走马灯配置 */
 .el-carousel__item h3 {
-    color: #475669;
+    color: #f9f9f9;
     opacity: 0.75;
     line-height: 200px;
     margin: 0;
@@ -73,5 +88,15 @@ const welcomeText = computed(()=>new Date().getHours()<12?"要开心啊每一天
 
 .el-carousel__item:nth-child(2n + 1) {
     background-color: #d3dce6;
+}
+
+.carousel-bg {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 </style>

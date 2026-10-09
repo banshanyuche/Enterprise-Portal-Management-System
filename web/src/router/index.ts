@@ -5,6 +5,7 @@ import component from 'element-plus/es/components/tree-select/src/tree-select-op
 import { createRouter, createWebHashHistory } from 'vue-router'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
+import New from '@/views/New.vue'
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
     path:'/news',
     name:'news',
     component:News
+  },
+  {
+    path:'/news/:id',
+    name:'new',
+    component:New
   },
   {
     path:'/product',

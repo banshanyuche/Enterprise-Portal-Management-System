@@ -8,7 +8,9 @@
                 </template>
                 <div v-if="searchText.length">
                     <div v-if="searchNewsList.length">
-                        <div v-for="data in searchNewsList" :key="data._id" class="search-item">{{ data.title }}</div>
+                        <div v-for="data in searchNewsList" :key="data._id" class="search-item" @click="handleChangePage(data._id)">
+                            {{ data.title }}
+                        </div>
                     </div>
                     <div v-else>
                         <el-empty description="暂无新闻"></el-empty>
@@ -21,7 +23,7 @@
         <!-- 24栅格 -->
         <el-row :gutter="20">
             <el-col :span="6" v-for="item in topNewsList" :key="item._id">
-                <el-card :body-style="{ padding: '0px' }" shadow="hover">
+                <el-card :body-style="{ padding: '0px' }" shadow="hover" @click="handleChangePage(item._id)">
                     <div class="image" :style="{ backgroundImage: `url(http://localhost:3000${item.cover})` }"></div>
                     <div style="padding:14px">
                         <span>{{ item.title }}</span>
@@ -33,6 +35,36 @@
             </el-col>
         </el-row>
     </div>
+    <el-tabs v-model="whichTab" class="demo-tabs" @tab-click="handleClick" style="margin: 20px;">
+        <el-tab-pane v-for="item in tablist" :label="item.label" :name="item.name" :key="item.name">
+            <el-row :gutter="20">
+                <el-col :span="18">
+                    <div v-for="data in tabnews[item.name]" :key="data._id" style="padding: 10px;">
+                        <el-card :body-style="{ padding: '0px' }" shadow="hover" @click="handleChangePage(data._id)">
+                            <div class="tab-image"
+                                :style="{ backgroundImage: `url(http://localhost:3000${data.cover})` }">
+                            </div>
+                            <div style="padding:14px;float: left;">
+                                <span>{{ data.title }}</span>
+                                <div class="bottom">
+                                    <time class="tab-time">{{ formatTime.getTime(data.editTime) }}</time>
+                                </div>
+                            </div>
+                        </el-card>
+                    </div>
+                </el-col>
+                <el-col :span="6">
+                    <el-timeline>
+                        <el-timeline-item v-for="(data, index) in tabnews[item.name]" :key="index"
+                            :timestamp="formatTime.getTime(data.editTime)">
+                            {{ data.title }}
+                        </el-timeline-item>
+                    </el-timeline>
+                </el-col>
+            </el-row>
+        </el-tab-pane>
+    </el-tabs>
+    <el-backtop :visibility-height="100"></el-backtop>
 </template>
 
 <script lang='ts' setup>
@@ -40,10 +72,15 @@ import { Search } from '@element-plus/icons-vue'
 import { ref, onMounted, computed } from "vue"
 import axios from 'axios';
 import dayjs from 'dayjs';
+import _ from "lodash"
+import { useRouter } from 'vue-router';
 
 const searchText = ref("")
 const visible = ref(false)
 const newsList = ref([] as any[])
+const whichTab = ref(1)
+
+const handleClick = () => { }
 
 // 中文时间设置
 dayjs.locale('zh-cn')
@@ -59,9 +96,33 @@ const searchNewsList = computed(() => newsList.value.filter(item => item.title.i
 const topNewsList = computed<any>(() => { return newsList.value.slice(0, 4) })
 
 const formatTime = {
-    getTime:(date:any)=>{
-         return dayjs(date).format('YYYY年MM月DD日 HH:mm:ss')
+    getTime: (date: any) => {
+        return dayjs(date).format('YYYY年MM月DD日 HH:mm:ss')
     }
+}
+
+const tablist = [
+    {
+        label: "最新动态",
+        name: 1
+    },
+    {
+        label: "典型案例",
+        name: 2
+    },
+    {
+        label: "通知公告",
+        name: 3
+    }
+]
+
+const tabnews = computed<any>(() => {
+    return _.groupBy(newsList.value, item => item.category)
+})
+
+const router = useRouter()
+const handleChangePage = (id:any)=>{
+    router.push(`/news/${id}`)
 }
 </script>
 
@@ -100,13 +161,25 @@ const formatTime = {
         background-size: cover;
     }
 
-    .el-card{
+    .el-card {
         height: 100%;
     }
 
-    .time{
+    .time {
         font-size: 13px;
         color: gray;
     }
+}
+
+.tab-image {
+    width: 150px;
+    height: 100px;
+    background-size: cover;
+    float: left;
+}
+
+.tab-time {
+    font-size: 13px;
+    color: gray;
 }
 </style>

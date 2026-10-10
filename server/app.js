@@ -11,7 +11,9 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 const UserRouter = require('./routes/admin/UserRouter');
 const NewsRouter = require('./routes/admin/NewsRouter')
+const WebNewsRouter = require('./routes/web/NewsRouter')
 const ProductRouter = require('./routes/admin/ProductRouter')
+const WebProductRouter = require('./routes/web/ProductRouter')
 const JWT = require('./util/JWT');
 
 var app = express();
@@ -29,6 +31,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+
+// /webapi/* 后台系统,放在token校验前
+app.use(WebNewsRouter)
+app.use(WebProductRouter)
 
 // 全局中间件，没一个请求到达服务之前都会执行全局中间件函数
 // 解析token值

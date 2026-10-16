@@ -18,7 +18,7 @@
             <!-- prop声明字段名用于校验 -->
             <el-form-item label="内容" prop="content">
                 <!-- v-if用来延迟组件的挂载，在onMounted得到数据后在进行组件的挂载，得到内容数据 -->
-                <editor @event="handleChange" :content="newsForm.content" v-if="newsForm.content"/>
+                <Editor :content="newsForm.content" @event="handleChange" class="editor"/>
             </el-form-item>
             <el-form-item label="类别" prop="category">
                 <!-- 下拉框 -->
@@ -137,5 +137,8 @@ onMounted(async ()=>{
 
 .editor {
     width: 100%;
+    border: 1px solid #dcdfe6;
+    min-height: 200px;
+    height: fit-content;
 }
 </style>

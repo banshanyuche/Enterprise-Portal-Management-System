@@ -20,7 +20,8 @@
             </el-form-item>
             <!-- prop声明字段名用于校验 -->
             <el-form-item label="内容" prop="content">
-                <editor @event="handleChange" />
+                <!-- 对应子组件中defineEmit(['event']) -->
+                <Editor  v-if="newsForm.content" :content="newsForm.content" @event="handleChange" class="editor"/>
             </el-form-item>
             <el-form-item label="类别" prop="category">
                 <!-- 下拉框 -->
@@ -80,7 +81,7 @@ const newsFormRules = reactive({
 
 // 每次editor内容改变的回调
 const handleChange = (data: any) => {
-    console.log(data)
+    // console.log(data)
     newsForm.content = data
 }
 
@@ -130,5 +131,8 @@ const submitForm = () => {
 
 .editor {
     width: 100%;
+    border: 1px solid #dcdfe6;
+    min-height: 200px;
+    height: fit-content;
 }
 </style>

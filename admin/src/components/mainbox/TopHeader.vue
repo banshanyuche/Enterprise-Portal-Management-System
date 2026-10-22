@@ -1,6 +1,7 @@
 <template>
     <el-header>
         <div class="left">
+            <!-- 点击绑定回调 -->
             <el-icon @click="handleCollapsed">
                 <Menu></Menu>
             </el-icon>
@@ -8,7 +9,7 @@
         </div>
 
         <div class="right">
-            <span style="margin-right: 10px;">欢迎 {{userInformation.userInfo.username}} 回来</span>
+            <span style="margin-right: 10px;">欢迎 {{userStore.userInfo.username}} 回来</span>
 
             <!-- 下拉菜单 -->
             <el-dropdown>
@@ -17,6 +18,7 @@
                         <user></user>
                     </el-icon>
                 </span>
+                <!-- 插槽 -->
                 <template #dropdown>
                     <el-dropdown-menu>
                         <el-dropdown-item @click="handleCenter">个人中心</el-dropdown-item>
@@ -36,20 +38,24 @@ import { User } from '@element-plus/icons-vue'
 import { useRouter } from 'vue-router'
 import userInformationStore from '../../store/userInformation.ts'
 
-const store = collapsedStore()
+const colStore = collapsedStore()
 const router = useRouter()
-const userInformation = userInformationStore()
+const userStore = userInformationStore()
 
+// 调用collapsed中方法更改isCollapsed值
 const handleCollapsed = () => {
-    store.changeCollapsed()
+    colStore.changeCollapsed()
 }
 
+// 跳转个人中心
 const handleCenter = ()=>{
     router.push('/center')
 }
+
+// 登出，清除token值、用户库信息
 const handleLogout = ()=>{
     localStorage.removeItem("token")
-    userInformation.clearUserInfo()
+    userStore.clearUserInfo()
     router.push('/login')
 }
 </script>

@@ -1,0 +1,5 @@
+此为文件照片上传模块
+
+在element-plus基础上进行计算
+
+初始未上传照片显示icon图标，上传后通过计算得到图片地址进行显示，on-change事件检测到变化，执行emit方法传回cover和file

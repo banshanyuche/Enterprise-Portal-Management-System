@@ -1,0 +1,8 @@
+sideMenu利用el-menu的：router进行路由跳转，实现导航栏的作用
+
+同时与topHeader相配合，借助collapsed库中isCollapsed进行侧边栏宽度的一个调整
+完成功能：点击topHeader左侧方块图标简略展示侧边栏
+
+作为用户权限检测处理的一环，采用自定义指令，在挂载后判断role，完成最基本的 **不向非管理员用户展示用户管理的导引**
+
+topHeader右侧设立小型导航栏，可跳转个人中心和登录页，利用useRouter进行跳转

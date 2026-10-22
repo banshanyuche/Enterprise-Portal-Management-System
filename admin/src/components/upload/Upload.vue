@@ -5,9 +5,8 @@
     <!-- auto-uoload：是否自动上传 -->
     <el-upload class="avatar-uploader" action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
         :show-file-list="false" :on-change="handleChange" :auto-upload="false">
-
+        <!-- 如果avatar存在显示，否则显示icon图标 -->
         <img v-if="props.avatar" :src="uploadAvatar" class="avatar" />
-
         <el-icon v-else class="avatar-uploader-icon">
             <Plus />
         </el-icon>
@@ -19,9 +18,7 @@ import { Plus } from '@element-plus/icons-vue'
 import { defineEmits, defineProps, computed } from 'vue'
 
 // 接收父组件传递的avatar参数
-const props = defineProps({
-    avatar: String
-})
+const props = defineProps({avatar: String})
 
 // 定义可触发的事件change
 const emit = defineEmits(["change"])

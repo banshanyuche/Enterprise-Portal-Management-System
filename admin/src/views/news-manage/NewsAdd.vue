@@ -21,7 +21,7 @@
             <!-- prop声明字段名用于校验 -->
             <el-form-item label="内容" prop="content">
                 <!-- 对应子组件中defineEmit(['event']) -->
-                <Editor  v-if="newsForm.content" :content="newsForm.content" @event="handleChange" class="editor"/>
+                <Editor :content="newsForm.content" @event="handleChange" class="editor"/>
             </el-form-item>
             <el-form-item label="类别" prop="category">
                 <!-- 下拉框 -->
